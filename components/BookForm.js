@@ -1,9 +1,18 @@
-import { useState } from "react";
+// components/BookForm.js
+import { useState, useEffect } from "react";
 import "../styles/estilos.css";
 
-export default function BookForm({ onSubmit }) {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
+export default function BookForm({ onSubmit, initialValues, submitLabel = "Add Book" }) {
+  const [title, setTitle] = useState(initialValues ? initialValues.title : "");
+  const [author, setAuthor] = useState(initialValues ? initialValues.author : "");
+
+  // Actualiza los campos si cambia el objeto de edición
+  useEffect(() => {
+    if (initialValues) {
+      setTitle(initialValues.title);
+      setAuthor(initialValues.author);
+    }
+  }, [initialValues]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -11,9 +20,13 @@ export default function BookForm({ onSubmit }) {
       alert("Please enter title and author.");
       return;
     }
-    onSubmit({ title, author });
-    setTitle("");
-    setAuthor("");
+    // Si se está editando, incluir el id
+    const bookData = initialValues ? { ...initialValues, title, author } : { title, author };
+    onSubmit(bookData);
+    if (!initialValues) { // Limpiar campos solo al agregar nuevo libro
+      setTitle("");
+      setAuthor("");
+    }
   };
 
   return (
@@ -32,7 +45,7 @@ export default function BookForm({ onSubmit }) {
         placeholder="Author"
         required
       />
-      <button type="submit">Add Book</button>
+      <button type="submit">{submitLabel}</button>
     </form>
   );
 }
