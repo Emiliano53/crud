@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import BookForm from "../components/BookForm";
+//importar estilos.css
+import "../styles/estilos.css";
 
 export default function Home() {
   const [books, setBooks] = useState([]);
